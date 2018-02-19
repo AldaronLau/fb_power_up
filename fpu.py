@@ -31,10 +31,10 @@ if not found:
 size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
 print("Framebuffer size: " + str(size[0]) + "x" + str(size[1]))
 
-H = int(size[1])
-W = int((H * int(4)) / int(3))
+H = int(480) # int(size[1])
+W = int(640) # int((H * int(4)) / int(3))
 
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN)
 
 # DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 # pygame.display.set_caption('Firebears Power Up')
