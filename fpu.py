@@ -38,6 +38,9 @@ H = int(size[1]) # int(480) # int(size[1])
 W = int(size[0]) # int(640) # int((H * int(4)) / int(3))
 
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+pygame.joystick.init()
+j = pygame.joystick.Joystick(0) # create a joystick instance
+j.init()
 
 # DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 # pygame.display.set_caption('Firebears Power Up')
@@ -136,6 +139,44 @@ while True: # main game loop
 				MOVE_NEG = False
 			elif event.key in (K_RIGHT, K_d):
 				MOVE_POS = False
+		elif event.type == JOYHATMOTION:
+			x, y = event.value
+
+			if x == -1:
+				MOVE_NEG = True
+			elif x == 0:
+				MOVE_POS = False
+				MOVE_NEG = False
+			elif x == 1:
+				MOVE_POS = True
+		elif event.type == pygame.JOYBUTTONDOWN:
+			if event.button == 0:
+				if abs(PLAYER_X - ROBOT_X) < (SMALL_DIV / 2):
+					HAS_ROBOT = True
+					ROBOT_CYCLE = 5
+				elif PLAYER_X < SMALL_DIV:
+					HAS_POWER_CUBE = True
+			elif event.button == 1:
+				if HAS_ROBOT:
+					HAS_ROBOT = False
+				elif PLAYER_X >= ((W / 2) - (SMALL_DIV / 2)) - (2 * SMALL_DIV) and PLAYER_X < (W / 2) and HAS_POWER_CUBE:
+					HAS_POWER_CUBE = False
+					L = L + 1
+			elif event.button == 2:
+				L = 0
+				R = 0
+				ROBOT_CYCLE = 0
+				COUNTDOWN = 30
+				MOVE_NEG = False
+				MOVE_POS = False
+				PLAYER_X = 0
+				ROBOT_X = W - SMALL_DIV
+				text = font.render('LEFT/RIGHT=Move, UP=Pick Up, DOWN=Set On Scale', True, c)
+				STATE = 0
+				HAS_ROBOT = False
+				HAS_YOU = False
+				ROBOT_HAS_POWERCUBE = False
+				HAS_POWER_CUBE = False
 
 	if MOVE_NEG and PLAYER_X > 0 and HAS_YOU == False:
 		PLAYER_X -= SMALL_DIV / 8
