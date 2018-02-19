@@ -90,7 +90,7 @@ COUNTDOWN = 30
 pygame.font.init()
 font = pygame.font.Font('SourceCodePro-Bold.ttf', 12)
 c = (0, 0, 0)
-text = font.render('LEFT/RIGHT=Move, UP=Pick Up, DOWN=Set On Scale', True, c)
+text = font.render('LEFT/RIGHT=Move, 0=Pick Up, 1=Set On Scale', True, c)
 
 STATE = 0
 
@@ -128,7 +128,7 @@ while True: # main game loop
 				MOVE_POS = False
 				PLAYER_X = 0
 				ROBOT_X = W - SMALL_DIV
-				text = font.render('LEFT/RIGHT=Move, UP=Pick Up, DOWN=Set On Scale', True, c)
+				text = font.render('LEFT/RIGHT=Move, 0=Pick Up, 1=Set On Scale', True, c)
 				STATE = 0
 				HAS_ROBOT = False
 				HAS_YOU = False
