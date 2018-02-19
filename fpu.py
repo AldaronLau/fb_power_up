@@ -1,35 +1,48 @@
 import pygame, sys, os
 from pygame.locals import *
 
-pygame.init()
-INFO = pygame.display.Info()
-H = int(INFO.current_h)
-W = int((H * int(4)) / int(3))
-
-#
+screen = None;
+	
+# Based on "Python GUI in Linux frame buffer"
+# http://www.karoltomala.com/blog/?p=679
 disp_no = os.getenv("DISPLAY")
 if disp_no:
-	# Check which frame buffer drivers are available
-	# Start with fbcon since directfb hangs with composite output
-	drivers = ['fbcon', 'directfb', 'svgalib']
-	found = False
-	for driver in drivers:
-		# Make sure that SDL_VIDEODRIVER is set
-		if not os.getenv('SDL_VIDEODRIVER'):
-			os.putenv('SDL_VIDEODRIVER', driver)
-			try:
-				pygame.display.init()
-			except pygame.error:
-				print('Driver: ' + driver + ' failed.')
-				continue
-			found = True
-			break
+	print("I'm running under X display = ", disp_no)
 
-		if not found:
-			raise Exception('No suitable video driver found!')
-#
+# Check which frame buffer drivers are available
+# Start with fbcon since directfb hangs with composite output
+drivers = ['fbcon', 'directfb', 'svgalib']
+found = False
+for driver in drivers:
+	# Make sure that SDL_VIDEODRIVER is set
+	if not os.getenv('SDL_VIDEODRIVER'):
+		os.putenv('SDL_VIDEODRIVER', driver)
+	try:
+		pygame.display.init()
+	except pygame.error:
+		print('Driver: ' + driver + ' failed.')
+		continue
+	found = True
+	break
 
-DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+if not found:
+	raise Exception('No suitable video driver found!')
+
+size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+print("Framebuffer size: " + str(size[0]) + "x" + str(size[1]))
+self.screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+# Clear the screen to start
+self.screen.fill((0, 0, 0))		
+# Initialise font support
+pygame.font.init()
+# Render the screen
+pygame.display.update()
+ 
+H = int(size[1])
+W = int((H * int(4)) / int(3))
+
+
+# DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 # pygame.display.set_caption('Firebears Power Up')
 
 LARGE_DIV = int(H / int(6))
@@ -136,7 +149,7 @@ while True: # main game loop
 		if HAS_ROBOT:
 			ROBOT_X = PLAYER_X
 
-	DISPLAYSURF.fill((127, 127, 255))
+	screen.fill((127, 127, 255))
 
 	for i in range(0, 8):
 		for j in range(0, 5):
@@ -145,7 +158,7 @@ while True: # main game loop
 				j * LARGE_DIV,
 				LARGE_DIV,
 				LARGE_DIV) )
-			DISPLAYSURF.blit(TILE_SKY, gRect)
+			screen.blit(TILE_SKY, gRect)
 
 	for i in range(0, 8):
 		gRect = pygame.Rect( (
@@ -153,7 +166,7 @@ while True: # main game loop
 			5 * LARGE_DIV,
 			LARGE_DIV,
 			LARGE_DIV) )
-		DISPLAYSURF.blit(TILE_FLOOR, gRect)
+		screen.blit(TILE_FLOOR, gRect)
 
 	# Loader Stations
 	gRect = pygame.Rect( (
@@ -161,14 +174,14 @@ while True: # main game loop
 		H - (SMALL_DIV + LARGE_DIV),
 		SMALL_DIV,
 		SMALL_DIV) )
-	DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+	screen.blit(TILE_POWER_CUBE, gRect)
 
 	gRect = pygame.Rect( (
 		W - SMALL_DIV,
 		H - (SMALL_DIV + LARGE_DIV),
 		SMALL_DIV,
 		SMALL_DIV) )
-	DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+	screen.blit(TILE_POWER_CUBE, gRect)
 
 	# scale
 	for i in range(-2, 3):
@@ -177,7 +190,7 @@ while True: # main game loop
 			H - (SMALL_DIV + LARGE_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_BASE, gRect)
+		screen.blit(TILE_BASE, gRect)
 
 	for i in range(1, 5):
 		gRect = pygame.Rect( (
@@ -185,7 +198,7 @@ while True: # main game loop
 			(H - (SMALL_DIV + LARGE_DIV)) - (i * SMALL_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_TOWER, gRect)
+		screen.blit(TILE_TOWER, gRect)
 
 	# Players
 	if HAS_YOU:
@@ -194,14 +207,14 @@ while True: # main game loop
 			H - ((SMALL_DIV * 2) + LARGE_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_YOU, gRect)
+		screen.blit(TILE_YOU, gRect)
 	else:
 		gRect = pygame.Rect( (
 			PLAYER_X,
 			H - (SMALL_DIV + LARGE_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_YOU, gRect)
+		screen.blit(TILE_YOU, gRect)
 
 	if HAS_POWER_CUBE:
 		if HAS_YOU:
@@ -210,14 +223,14 @@ while True: # main game loop
 				H - ((SMALL_DIV * 3) + LARGE_DIV),
 				SMALL_DIV,
 				SMALL_DIV) )
-			DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+			screen.blit(TILE_POWER_CUBE, gRect)
 		else:
 			gRect = pygame.Rect( (
 				PLAYER_X,
 				H - ((SMALL_DIV * 2) + LARGE_DIV),
 				SMALL_DIV,
 				SMALL_DIV) )
-			DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+			screen.blit(TILE_POWER_CUBE, gRect)
 
 	if HAS_ROBOT:
 		gRect = pygame.Rect( (
@@ -225,14 +238,14 @@ while True: # main game loop
 			H - ((SMALL_DIV * 2) + LARGE_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_ROBOT, gRect)
+		screen.blit(TILE_ROBOT, gRect)
 	else:
 		gRect = pygame.Rect( (
 			ROBOT_X,
 			H - (SMALL_DIV + LARGE_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_ROBOT, gRect)
+		screen.blit(TILE_ROBOT, gRect)
 
 	if ROBOT_HAS_POWERCUBE:
 		if HAS_ROBOT:
@@ -241,14 +254,14 @@ while True: # main game loop
 				H - ((SMALL_DIV * 3) + LARGE_DIV),
 				SMALL_DIV,
 				SMALL_DIV) )
-			DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+			screen.blit(TILE_POWER_CUBE, gRect)
 		else:
 			gRect = pygame.Rect( (
 				ROBOT_X,
 				H - ((SMALL_DIV * 2) + LARGE_DIV),
 				SMALL_DIV,
 				SMALL_DIV) )
-			DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+			screen.blit(TILE_POWER_CUBE, gRect)
 
 	# balancer
 	if L > R:
@@ -265,7 +278,7 @@ while True: # main game loop
 			(H - (SMALL_DIV + LARGE_DIV)) - ((3 + BALANCER) * SMALL_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_PLATFORM, gRect)
+		screen.blit(TILE_PLATFORM, gRect)
 
 	# right scale
 	for i in range(1, 4):
@@ -274,7 +287,7 @@ while True: # main game loop
 			(H - (SMALL_DIV + LARGE_DIV)) - ((3 - BALANCER) * SMALL_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_PLATFORM, gRect)
+		screen.blit(TILE_PLATFORM, gRect)
 
 	# power cubes
 	for i in range(0, L):
@@ -283,7 +296,7 @@ while True: # main game loop
 			(H - (SMALL_DIV + LARGE_DIV)) - ((4 + i - BALANCER) * SMALL_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+		screen.blit(TILE_POWER_CUBE, gRect)
 
 	for i in range(0, R):
 		gRect = pygame.Rect( (
@@ -291,7 +304,7 @@ while True: # main game loop
 			(H - (SMALL_DIV + LARGE_DIV)) - ((4 + i + BALANCER) * SMALL_DIV),
 			SMALL_DIV,
 			SMALL_DIV) )
-		DISPLAYSURF.blit(TILE_POWER_CUBE, gRect)
+		screen.blit(TILE_POWER_CUBE, gRect)
 
 	# 
 	if STATE == 0:
@@ -303,7 +316,7 @@ while True: # main game loop
 			STATE = 1
 
 	# TEXT
-	DISPLAYSURF.blit(text, (0, 0))
+	screen.blit(text, (0, 0))
 
 	pygame.display.update()
 
