@@ -5,7 +5,33 @@ pygame.init()
 INFO = pygame.display.Info()
 H = int(INFO.current_h)
 W = int((H * int(4)) / int(3))
-DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.NOFRAME | pygame.DOUBLEBUF)
+
+#
+disp_no = os.getenv("DISPLAY")
+if disp_no:
+	print "I'm running under X display = {0}".format(disp_no)
+
+	# Check which frame buffer drivers are available
+	# Start with fbcon since directfb hangs with composite output
+	drivers = ['fbcon', 'directfb', 'svgalib']
+	found = False
+	for driver in drivers:
+		# Make sure that SDL_VIDEODRIVER is set
+		if not os.getenv('SDL_VIDEODRIVER'):
+			os.putenv('SDL_VIDEODRIVER', driver)
+			try:
+				pygame.display.init()
+			except pygame.error:
+				print 'Driver: {0} failed.'.format(driver)
+				continue
+			found = True
+			break
+
+		if not found:
+			raise Exception('No suitable video driver found!')
+#
+
+DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 # pygame.display.set_caption('Firebears Power Up')
 
 LARGE_DIV = int(H / int(6))
