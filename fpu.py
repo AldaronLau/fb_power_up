@@ -31,16 +31,12 @@ if not found:
 size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
 print("Framebuffer size: " + str(size[0]) + "x" + str(size[1]))
 
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
-# Clear the screen to start
-# screen.fill((0, 0, 0))
-# Initialise font support
-# pygame.font.init()
-# Render the screen
-# pygame.display.update()
-
 H = int(size[1])
 W = int((H * int(4)) / int(3))
+
+screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+
+
 
 
 # DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
