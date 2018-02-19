@@ -3,30 +3,33 @@ from pygame.locals import *
 
 screen = None;
 	
-# Based on "Python GUI in Linux frame buffer"
-# http://www.karoltomala.com/blog/?p=679
-disp_no = os.getenv("DISPLAY")
-if disp_no:
-	print("I'm running under X display = ", disp_no)
+try:
+	pygame.display.init()
+except pygame.error:
+	# Based on "Python GUI in Linux frame buffer"
+	# http://www.karoltomala.com/blog/?p=679
+	disp_no = os.getenv("DISPLAY")
+	if disp_no:
+		print("I'm running under X display = ", disp_no)
 
-# Check which frame buffer drivers are available
-# Start with fbcon since directfb hangs with composite output
-drivers = ['fbcon', 'directfb', 'svgalib']
-found = False
-for driver in drivers:
-	# Make sure that SDL_VIDEODRIVER is set
-	if not os.getenv('SDL_VIDEODRIVER'):
-		os.putenv('SDL_VIDEODRIVER', driver)
-	try:
-		pygame.display.init()
-	except pygame.error:
-		print('Driver: ' + driver + ' failed.')
-		continue
-	found = True
-	break
+	# Check which frame buffer drivers are available
+	# Start with fbcon since directfb hangs with composite output
+	drivers = ['fbcon', 'directfb', 'svgalib']
+	found = False
+	for driver in drivers:
+		# Make sure that SDL_VIDEODRIVER is set
+		if not os.getenv('SDL_VIDEODRIVER'):
+			os.putenv('SDL_VIDEODRIVER', driver)
+		try:
+			pygame.display.init()
+		except pygame.error:
+			print('Driver: ' + driver + ' failed.')
+			continue
+		found = True
+		break
 
-if not found:
-	raise Exception('No suitable video driver found!')
+	if not found:
+		raise Exception('No suitable video driver found!')
 
 size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
 print("Framebuffer size: " + str(size[0]) + "x" + str(size[1]))
@@ -34,7 +37,7 @@ print("Framebuffer size: " + str(size[0]) + "x" + str(size[1]))
 H = int(size[1]) # int(480) # int(size[1])
 W = int(size[0]) # int(640) # int((H * int(4)) / int(3))
 
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.DOUBLEBUF)
 
 # DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 # pygame.display.set_caption('Firebears Power Up')
