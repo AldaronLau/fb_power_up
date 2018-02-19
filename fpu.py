@@ -20,7 +20,7 @@ if disp_no:
 			try:
 				pygame.display.init()
 			except pygame.error:
-				print 'Driver: {0} failed.'.format(driver)
+				print('Driver: ' + driver + ' failed.')
 				continue
 			found = True
 			break
