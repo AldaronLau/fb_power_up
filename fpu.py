@@ -43,7 +43,7 @@ screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 # pygame.display.set_caption('Firebears Power Up')
 
 LARGE_DIV = int(H / int(6))
-SMALL_DIV = int(64)
+SMALL_DIV = int(H / 12)
 
 FLOOR = pygame.image.load('floor.png')
 SKY = pygame.image.load('sky.png')
