@@ -3,13 +3,13 @@ from pygame.locals import *
 
 pygame.init()
 INFO = pygame.display.Info()
-H = INFO.current_h
-W = (H * 4) / 3
+H = int(INFO.current_h)
+W = int((H * int(4)) / int(3))
 DISPLAYSURF = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.NOFRAME | pygame.DOUBLEBUF)
-pygame.display.set_caption('Firebears Power Up')
+# pygame.display.set_caption('Firebears Power Up')
 
-LARGE_DIV = H / 6
-SMALL_DIV = 64
+LARGE_DIV = int(H / int(6))
+SMALL_DIV = int(64)
 
 FLOOR = pygame.image.load('floor.png')
 SKY = pygame.image.load('sky.png')
@@ -279,7 +279,7 @@ while True: # main game loop
 			STATE = 1
 
 	# TEXT
-        DISPLAYSURF.blit(text, (0, 0))
+	DISPLAYSURF.blit(text, (0, 0))
 
 	pygame.display.update()
 
