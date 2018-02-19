@@ -88,7 +88,7 @@ ROBOT_CYCLE = 0
 COUNTDOWN = 30
 
 pygame.font.init()
-font = pygame.font.Font('SourceCodePro-Bold.ttf', 30)
+font = pygame.font.Font('SourceCodePro-Bold.ttf', 12)
 c = (0, 0, 0)
 text = font.render('LEFT/RIGHT=Move, UP=Pick Up, DOWN=Set On Scale', True, c)
 
@@ -171,7 +171,7 @@ while True: # main game loop
 				MOVE_POS = False
 				PLAYER_X = 0
 				ROBOT_X = W - SMALL_DIV
-				text = font.render('LEFT/RIGHT=Move, UP=Pick Up, DOWN=Set On Scale', True, c)
+				text = font.render('LEFT/RIGHT=Move, 0=Pick Up, 1=Set On Scale', True, c)
 				STATE = 0
 				HAS_ROBOT = False
 				HAS_YOU = False
@@ -347,10 +347,10 @@ while True: # main game loop
 	# 
 	if STATE == 0:
 		if L > 5:
-			text = font.render('YOU WIN! BACKSPACE=RESET', True, c)
+			text = font.render('YOU WIN! PRESS 2 to RESET', True, c)
 			STATE = 1
 		if R > 5:
-			text = font.render('YOU LOSE! BACKSPACE=RESET', True, c)
+			text = font.render('YOU LOSE! PRESS 2 to RESET', True, c)
 			STATE = 1
 
 	# TEXT
