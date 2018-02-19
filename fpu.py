@@ -34,7 +34,7 @@ print("Framebuffer size: " + str(size[0]) + "x" + str(size[1]))
 H = int(size[1])
 W = int((H * int(4)) / int(3))
 
-screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+screen = pygame.display.set_mode((W, H), pygame.FULLSCREEN)
 
 
 
