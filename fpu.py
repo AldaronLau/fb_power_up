@@ -142,13 +142,23 @@ while True: # main game loop
 		elif event.type == JOYHATMOTION:
 			x, y = event.value
 
-			if x == -1:
+			if x < -0.5:
 				MOVE_NEG = True
-			elif x == 0:
+			elif x > 0.5:
+				MOVE_POS = True
+			else:
 				MOVE_POS = False
 				MOVE_NEG = False
-			elif x == 1:
+		elif event.type == JOYAXISMOTION and event.axis == 0:
+			x = event.value
+
+			if x < -0.5:
+				MOVE_NEG = True
+			elif x > 0.5:
 				MOVE_POS = True
+			else:
+				MOVE_POS = False
+				MOVE_NEG = False
 		elif event.type == pygame.JOYBUTTONDOWN:
 			if event.button == 0:
 				if abs(PLAYER_X - ROBOT_X) < (SMALL_DIV / 2):
